@@ -4,6 +4,7 @@ import express from 'express'
 import cors from 'cors' //Cors define regras para que nossa API seja chamada de alguma origem
 import { userRoutes } from './routes/user.routes'
 import * as dotenv from 'dotenv'
+import { databaseConnection } from './database/database.connection'
 
 dotenv.config()
 
@@ -15,6 +16,10 @@ app.use(cors())
 
 app.use("/user", userRoutes())
 
-app.listen(process.env.PORT, () => {
-    console.log (`API esta rodando na porta ${process.env.PORT}`)
+//Aqui nos vamos estar iniciando a nossa conexao com o banco de dados sempre que rodarmos a API
+
+databaseConnection.connect().then (() => {
+    app.listen(process.env.PORT, () => {
+        console.log (`API esta rodando na porta ${process.env.PORT}`)
+    })
 })

@@ -1,11 +1,12 @@
 import { user } from "../models/user.models";
+import { databaseConnection } from "./database.connection";
 import { users } from "./users";
 
 export class userDatabase {
-    public list () {
-        return [
-            ...users
-        ]
+    public async list () {
+        const result = await databaseConnection.connection.query("select * from trabalho.user")
+
+        return result.rows
     }
     
     public get (id: string) {

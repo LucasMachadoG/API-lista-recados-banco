@@ -5,17 +5,17 @@ import { serverError } from "../errors/serverError";
 import { user } from "../models/user.models";
 
 export class userController {
-    public list (req: Request, res: Response) {
+    public async list (req: Request, res: Response) {
         try {
             const database = new userDatabase()
-            const users = database.list()
+            const users = await database.list()
 
-            const result = users.map((user) => user.toJason())
+            // const result = users.map((user) => user.toJason())
 
             return res.status(200).send({
                 ok: false,
                 message: "Users successfully listed",
-                data: result
+                data: users
             })
         } catch (error: any) {
             return serverError.genericError(res, error)
