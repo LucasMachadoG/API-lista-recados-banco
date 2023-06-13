@@ -3,16 +3,15 @@ import { Recados } from "./recados.model"
 
 export class user {
     private _id: string
-    private _recados: Recados []
 
     constructor (
         private _username: string,
         private _email: string,
-        private _password: string
+        private _password: string,
+        private _recados?: Recados []
 
     ) {
         this._id = createUuid ()
-        this._recados = []
     }
 
     public get id () {
@@ -51,7 +50,16 @@ export class user {
         return {
             id: this._id,
             username: this._username,
-            email: this._email
+            email: this._email,
+            recados: this._recados
         }
+    }
+
+    public static create (id: string, username: string, email: string, password: string, recados: Recados []) {
+        const User = new user(username, email, password, recados)
+
+        User._id = id
+
+        return User
     }
 }
