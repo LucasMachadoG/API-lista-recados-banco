@@ -4,31 +4,26 @@ import { userDatabase } from "../../user/repositories/user.repository";
 import { requestError } from "../../../shared/errors/request.error";
 import { Recados } from "../../../models/recados.model";
 import { recadoDatabase } from "../respositories/recado.repository";
-import { listRecadoUsecase } from "../usecases/list.recado.usecase";
+import { CreateRecadoUsecaseFactory, ListRecadoUsecaseFactory } from "../util/recado.usecase.factory";
 
 export class recadosController {
     public async list(req: Request, res: Response) {
-        const { id } = req.params
-
-        const result = await new listRecadoUsecase().execute(
-            id,
-        )
-
-        return res.status(result.code).send({
-            ok: result.ok,
-            message: result.message,
-            data: result.data
-        })
+        try {
+            const { id } = req.params
+    
+            const usecase = ListRecadoUsecaseFactory()
+            const result = await usecase.execute(id)
+    
+            return res.status(result.code).send(result)
+        } catch (error: any) {
+            return serverError.genericError(res, error)
+        }
     }
 
     public async create (req: Request, res: Response) {
         try {
             const { id } = req.params
-            const { nome, descricao, conteudo } = req.body
-
-            if (!nome) {
-                return requestError.fieldNotProvider(res, "Nome")
-            }
+            const { descricao, conteudo } = req.body
 
             if (!descricao) {
                 return requestError.fieldNotProvider(res, "Descriacao")
@@ -38,21 +33,14 @@ export class recadosController {
                 return requestError.fieldNotProvider(res, "Conteudo")
             }
 
-            const userdatabase = new userDatabase()
-            const user = await userdatabase.get(id)
-
-            if (!user) {
-                return requestError.notFoundError(res, "User")
-            }
-
-            const database = new recadoDatabase()
-            const result = await database.create(id, new Recados(nome, descricao, conteudo))
-
-            return res.status(201).send({
-                ok: true, 
-                message: "Recado successfully created!",
-                data: result.toJson()
+            const usecase = CreateRecadoUsecaseFactory()
+            const result = await usecase.execute({
+                id, 
+                descricao,
+                conteudo
             })
+
+            return res.status(result.code).send(result)
         } catch (error: any) {
             return serverError.genericError(res, error)
         }

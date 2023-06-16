@@ -9,9 +9,6 @@ export class recadoEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string
 
-    @Column() 
-    nome: string
-
     @Column({
         type: "text"
     })

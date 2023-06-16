@@ -1,17 +1,25 @@
 import { user } from "../../../models/user.models"
-import { Return } from "../../../shared/utils/usecase.retur"
+import { cacheRepositoryContract } from "../../../shared/utils/cache.repository.contract"
+import { Return } from "../../../shared/utils/usecase.return"
 import { userDatabase } from "../repositories/user.repository"
+import { CreateUserRepositoryContract } from "../util/user.repository.contract"
 
-interface createUserParams {
+export interface createUserParams {
     username: string,
     email: string,
     password: string
 }
 
+const usersCacheKey = "users"
+
 export class createUserUsecase {
+    constructor (
+        private database: CreateUserRepositoryContract,
+        private cache: cacheRepositoryContract
+    ) {}
+
     public async execute (data: createUserParams): Promise<Return> {
-        const database = new userDatabase ()
-        const userEmail = await database.getByEmail(data.email)
+        const userEmail = await this.database.getByEmail(data.email)
 
         let errors: string[] = []
 
@@ -49,7 +57,9 @@ export class createUserUsecase {
             data.password
         )
 
-        const result = await database.create(User)
+        const result = await this.database.create(User)
+        
+        await this.cache.delete(usersCacheKey)
 
         return {
             ok: true,

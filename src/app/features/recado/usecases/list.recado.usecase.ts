@@ -1,16 +1,31 @@
-import { Return } from "../../../shared/utils/usecase.retur";
-import { recadoDatabase } from "../respositories/recado.repository";
+import { Return } from "../../../shared/utils/usecase.return";
+import { GetUserRepositoryContract } from "../../user/util/user.repository.contract";
+import { ListRecadoRepositoryContract } from "../util/recado.repository.contract";
 
-export class listRecadoUsecase {
+export class listRecadosUsecase {
+    constructor (
+        private database: ListRecadoRepositoryContract,
+        private userDatabase: GetUserRepositoryContract
+    ){}
+
     public async execute (id: string): Promise<Return> {
-        const database = new recadoDatabase()
-        const recados = await database.list(id)
+        const user = await this.userDatabase.get(id)
 
-        const result = recados.map ((recado) => recado.toJson())
+        if (!user) {
+            return {
+                ok: false,
+                message: "Usuario nao encontrado",
+                code: 400
+            }
+        }
+
+        const recados = await this.database.list(id)
+
+        const result = recados.map((recado) => recado.toJson())
 
         return {
             ok: true,
-            message: "Recados successfully listed!",
+            message: "Recados listados com sucesso",
             code: 200,
             data: result
         }

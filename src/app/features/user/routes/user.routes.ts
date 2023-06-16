@@ -20,7 +20,10 @@ export const userRoutes = () => {
     //POST http://localhost:3333/user
     app.put ("/:id", middlewaresForMethodAndLog, new userController().update)
 
-    app.put ("/", middlewaresForMethodAndLog, new userController().loginValida)
+    let nome: string = "Lucas"
+
+    nome = "vini"
+
 
     return app
 }

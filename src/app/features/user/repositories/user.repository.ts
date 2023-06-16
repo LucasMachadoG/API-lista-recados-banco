@@ -106,7 +106,7 @@ export class userDatabase {
 
     // }
     
-    public async getByEmail (email: string) {
+    public async getByEmail (email: string | undefined): Promise<user | null> {
         const result = await this.repository.findOne({
             where:{
                 email

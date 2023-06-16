@@ -5,37 +5,19 @@ import { recadoEntity } from "../../../shared/database/entities/recado.entity";
 export class recadoDatabase {
     private repository = databaseConnection.connection.getRepository(recadoEntity)
 
-    public async list (id: string, nome?: string, arquivado?: boolean) {
-        const parametros: any = {
-            id,
-        };
-            
-        if (nome !== undefined) {
-            parametros.nome = nome;
-        }
-        
-        if (arquivado !== undefined) {
-            parametros.arquivado = arquivado;
-        }
-
+    public async list (id: string) {
         const result = await this.repository.find({
-            where: parametros
+            where: { idUser: id }
         })
 
         return result.map ((item) => recadoDatabase.mapEntityModel(item))
     }
 
     public static mapEntityModel (entity: recadoEntity): Recados {
-        // const userEntity = entity.user
-
-        // const user = userDatabase.mapToModel(userEntity)
-
         return Recados.create(
             entity.id,
-            entity.nome,
             entity.descricao,
             entity.conteudo
-            // result
         )
     }
 

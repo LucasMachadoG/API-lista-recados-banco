@@ -1,10 +1,17 @@
-import { Return } from "../../../shared/utils/usecase.retur";
-import { userDatabase } from "../repositories/user.repository";
+import { cacheRepositoryContract } from "../../../shared/utils/cache.repository.contract";
+import { Return } from "../../../shared/utils/usecase.return";
+import { DeleteUserRepositoryContract } from "../util/user.repository.contract";
+
+const usersCacheKey = "users"
 
 export class deleteUserUsecase {
+    constructor (
+        private database: DeleteUserRepositoryContract,
+        private cache: cacheRepositoryContract
+    ) {}
+
     public async execute (id: string): Promise<Return> {
-        const database = new userDatabase()
-        const result = await database.delete(id)
+        const result = await this.database.delete(id)
 
         if (result === 0) {
             return {
@@ -13,6 +20,8 @@ export class deleteUserUsecase {
                 code: 400
             }
         }
+
+        await this.cache.delete(usersCacheKey)
 
         return {
             ok: true,

@@ -7,5 +7,7 @@ export const recadosRoutes = () => {
 
     app.get ("/:id/recados", middlewaresForMethodAndLog, new recadosController().list)
 
+    app.post ("/:id/recados", middlewaresForMethodAndLog, new recadosController().create)
+
     return app
 }

@@ -11,7 +11,7 @@ export class databaseConnection {
         //O connect me retorna a referencia desse conexao e quando nos fizer a conexao nos queremos gravar essa referemcia em um campo
         //para que depois a gente possa usar essa referencia
         this._connection =  await config.initialize()
-        console.log ("Database connected")
+        console.log ("Database connected!")
     }
 
     public static get connection () {

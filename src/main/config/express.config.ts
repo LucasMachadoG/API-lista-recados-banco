@@ -4,13 +4,16 @@ import cors from "cors" //Cors define regras para que nossa API seja chamada de 
 import express from "express"
 import { userRoutes } from "../../app/features/user/routes/user.routes"
 import { recadosRoutes } from "../../app/features/recado/routes/recados.routes"
+import { loginRoutes } from "../../app/features/login/routes/login.routes"
 
 export const createApp = () => {
     const app = express ()
 
     app.use(express.json())
     app.use(cors())
-    app.use("/user", userRoutes(), recadosRoutes())
+    app.use("/user", userRoutes())
+    app.use("/user", recadosRoutes())
+    app.use("/auth", loginRoutes())
 
     return app
 }
