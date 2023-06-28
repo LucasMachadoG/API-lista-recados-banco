@@ -1,50 +1,36 @@
-import { BaseEntity, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { recadoEntity } from './recado.entity';
-//O model do back-end eh a nossa classe user, ja o model do nosso banco de dados vai ser a nossa classe entity
-//Toda tabela de um banco de dados relacional tem que ter uma PK
-//Se colocarmos uma coluna normal, o typeorm vai entender que ela eh uma coluna obrigatoria
-//Entidade eh oq mapeia o back end para o banco de dados
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, OneToMany, BaseEntity, PrimaryGeneratedColumn, PrimaryColumn } from "typeorm";
+import { RecadoEntity } from "./recados.entity";
 
-// Para se usar o Typeorm como um active record nos devemos extender a nossa classe
-
-@Entity({
-    name: 'user',
-    schema: 'trabalho'
+@Entity({ 
+    name: "users", 
 })
 export class userEntity extends BaseEntity {
-    @PrimaryGeneratedColumn('uuid')
-    public id: string;
-
-    @Column({
-        length: 30
-    })
-    public username: string;
+    @PrimaryColumn()
+      id: string;
 
     @Column()
-    public email: string;
+    username: string;
 
     @Column({
-        length: 30
+        unique: true
     })
-    public password: string;
+    email: string;
 
-    @Column ({
-        name: "dthr_atualizacao",
-        type: "timestamp"
-    }) 
-    public dthratualizacao: Date
+    @Column()
+    password: string;
 
-    // Esse eager serve para que toda vez que um user for consultado pelo banco de dados, o typeorm vai automaticamente buscar esse relacionamento
-    // Mesmo sem colocar o relations
-    // Nos podemos fazer o inverso tambem
-    @OneToMany(() => recadoEntity, (recado) => recado.user, {
+    @CreateDateColumn({ 
+        name: "dthr_criacao" 
+    })
+    dthrCriacao: Date;
+
+    @UpdateDateColumn({ 
+        name: "dthr_atualizacao" 
+    })
+    dthrAtualizacao: Date;
+
+    @OneToMany(() => RecadoEntity, (recado) => recado.user, {
         eager: true
     })
-    recados: recadoEntity[]
-
-    // O beforeupdate so vai funcionar se nos utilizar o safe
-    // @BeforeUpdate()
-    // beforeUpdate () {
-    //     this.dthratualizacao = new Date
-    // }
+    recados: RecadoEntity[]
 }

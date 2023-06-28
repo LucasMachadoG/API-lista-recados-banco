@@ -1,20 +1,30 @@
 import { v4 as createUuid } from "uuid";
-import { user } from "./user.models";
 
 export class Recados {
    private _id: string
-   private _arquivada: boolean
 
    constructor (
-      private _descricao: string,
-      private _conteudo: string
+      public _descricao: string,
+      public _conteudo: string,
+      public _arquivada: boolean = false
    ){
       this._id = createUuid()
-      this._arquivada = false
    }
 
    public get id () {
       return this._id
+   }
+
+   public get descricao() {
+      return this._descricao
+   }
+
+   public get conteudo() {
+      return this._conteudo
+   }
+
+   public get arquivada() {
+      return this._arquivada
    }
 
    public set descricao (descricao: string) {
@@ -25,15 +35,19 @@ export class Recados {
       this._conteudo = conteudo
    }
 
-   public static create (id: string, descricao: string, conteudo: string) {
-      const recado = new Recados(descricao, conteudo)
+   public set arquivada (arquivada: boolean) {
+      this._arquivada = arquivada
+   }
+
+   public static create (id: string, descricao: string, conteudo: string, arquivada: boolean) {
+      const recado = new Recados(descricao, conteudo, arquivada)
 
       recado._id = id
 
       return recado
    }
 
-   public toJson () {
+   public toJson(){
       return {
          descricao: this._descricao,
          conteudo: this._conteudo,

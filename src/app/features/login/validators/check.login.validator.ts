@@ -5,18 +5,17 @@ import { jwtAdapter } from "../../../shared/utils/jwtadapter";
 export const checkLoginValidator = (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.headers["authorization"]
-        req.headers ["usuario"] = ""
+        req.headers ["user"] = ""
 
         if(!token) {
-            return {
+            return res.status(401).send({
                 ok: false,
-                code: 401,
-                message: "O token nao foi informado!"
-            }
+                message: "O token nao foi informado"
+            })
         }
 
         const usuario = jwtAdapter.checkToken(token)
-        req.headers["usuario"] = JSON.stringify(usuario)
+        req.headers["user"] = JSON.stringify(usuario)
 
         next()
     } catch (error: any) {

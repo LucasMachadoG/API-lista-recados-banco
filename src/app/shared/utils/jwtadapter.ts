@@ -7,6 +7,8 @@ import { authEnv } from "../../envs/auth.env"
 export class jwtAdapter {
     public static createToken (data: any){
         
+        // return Jwt.sign(data, authEnv.secret!, { expiresIn: `${expiresInMinutes}m` });
+
         return Jwt.sign(JSON.stringify(data), authEnv.secret!)
     }   
 
@@ -14,3 +16,4 @@ export class jwtAdapter {
         return Jwt.verify(token, authEnv.secret!)
     }
 }
+

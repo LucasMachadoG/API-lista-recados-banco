@@ -3,12 +3,12 @@ import { cacheRepositoryContract } from "../../../shared/utils/cache.repository.
 import { Return } from "../../../shared/utils/usecase.return"
 import { ListUserRepositoryContract } from "../util/user.repository.contract"
 
-interface listUserParams {
-    username?: string | undefined,
-    email?: string | undefined
+interface ListUserParams {
+    username: string
+    email: string
 }
 
-const usersCacheKey = "users"
+const usersCacheKeyPrefix = "users"
 
 export class listUsecase {
     constructor (
@@ -16,10 +16,12 @@ export class listUsecase {
         private cache: cacheRepositoryContract
     ) {}
 
-    public async execute (): Promise<Return> {
-        const cacheResult = await this.cache.get<user | null>(usersCacheKey)
+    public async execute (data: ListUserParams): Promise<Return> {
+        const cacheKey = `${usersCacheKeyPrefix}:${data.username ?? ""}:${data.email ?? ""}`;
 
-        if(cacheResult !== null) {
+        const cacheResult = await this.cache.get<user | null>(cacheKey)
+
+        if(cacheResult) {
             return {
                 ok: true,
                 code: 200, 
@@ -28,17 +30,19 @@ export class listUsecase {
             }
         }
 
-        const users = await this.database.list()
+        const users = await this.database.list(data.username, data.email)
 
         const result =  users.map((user) => user.toJason())
 
-        await this.cache.set(usersCacheKey, result)
+        if (result.length > 0) {
+            await this.cache.set(cacheKey, result);
+        }
 
         return {
             ok: true,
+            code: 200,
             message: "Usuarios listados com sucesso!",
             data: result,
-            code: 200
         }
     }
 }

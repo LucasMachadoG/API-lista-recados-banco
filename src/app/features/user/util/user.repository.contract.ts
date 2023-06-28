@@ -2,6 +2,9 @@ import { user } from "../../../models/user.models";
 
 export interface CreateUserRepositoryContract {
     create: (user: user) => Promise<user>
+}
+
+export interface CreateUserRepositoryEmailContract {
     getByEmail: (email: string) => Promise<user | null>
 }
 
@@ -13,15 +16,10 @@ export interface GetUserRepositoryContract {
     get: (id: string) => Promise<user | null>
 }
 
-// export interface ListUserRepositoryParams {
-//     nome: string
-//     arquivada: string
-// }
-
 export interface ListUserRepositoryContract {
-    list: () => Promise<any[]>
+    list: (username?: string, email?: string) => Promise<user[]>
 }
 
 export interface UpdateUserRepositoryContract {
-    
+    update: () => Promise<number>
 }

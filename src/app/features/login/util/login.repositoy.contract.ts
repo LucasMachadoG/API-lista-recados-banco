@@ -1,5 +1,5 @@
-import { loginParams } from "../usecase/login.usecase";
+import { user } from "../../../models/user.models";
 
 export interface LoginRepositoryContract {
-    login: (email: string, password: string) => Promise<any>
+    getByEmailLogin: (email: string, password: string) => Promise<user | null>
 }

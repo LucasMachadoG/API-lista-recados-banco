@@ -1,7 +1,5 @@
 import { Request ,Response } from "express";
-import { requestError } from "../../../shared/errors/request.error";
 import { serverError } from "../../../shared/errors/serverError";
-import { updateUserUsecase } from "../usecases/update.user.usecase";
 import { 
     createUserUsecaseFactory, 
     listUserUsecaseFactory,
@@ -13,16 +11,15 @@ import {
 export class userController {
     public async list (req: Request, res: Response) {
         try { 
-            // const { username, email } = req.query
+            const { username, email } = req.query
 
             const usecase = listUserUsecaseFactory()
-            const result = await usecase.execute()
-
-            return res.status(result.code).send({
-                ok: result.ok,
-                message: result.message,
-                data: result.data
+            const result = await usecase.execute({
+                username: username as string ?? undefined,
+                email: email as string  ?? undefined
             })
+
+            return res.status(result.code).send(result)
         } catch (error: any) {
             return serverError.genericError(res, error)
         }
@@ -35,11 +32,7 @@ export class userController {
             const usecase = GetUserUsecaseFactory()
             const result = await usecase.execute(id)
 
-            return res.status(result.code).send({
-                ok: result.ok ,
-                message: result.message,
-                data: result.data
-            })
+            return res.status(result.code).send(result)
         } catch (error: any) {
             return serverError.genericError(res, error)
         }
@@ -56,11 +49,7 @@ export class userController {
                 password
             })
 
-            return res.status(result.code).send({
-                ok: result.ok, 
-                message: result.message,
-                data: result.data
-            })
+            return res.status(result.code).send(result)
 
         } catch (error: any) {
             return serverError.genericError(res, error)
@@ -74,12 +63,7 @@ export class userController {
             const usecase = deleteUserUsecaseFactory()
             const result = await usecase.execute(id)
 
-            return res.status(result.code).send({
-                ok: result.ok,
-                message: result.message,
-                data: id
-            })
-            
+            return res.status(result.code).send(result)
         } catch (error: any) {
             return serverError.genericError(res, error)
         }
@@ -98,11 +82,7 @@ export class userController {
                 password
             })
 
-            return res.status(result.code).send({
-                ok: result.ok, 
-                message: result.message,
-                data: id
-            })
+            return res.status(result.code).send(result)
         } catch (error: any) {
             return serverError.genericError(res, error)
         }

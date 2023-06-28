@@ -13,13 +13,13 @@ export class loginUsecase {
     ) {}
 
     public async execute (data: loginParams): Promise<Return> {
-        const usuario = await this.database.login(data.email, data.password)
+        const usuario = await this.database.getByEmailLogin(data.email, data.password)
 
         if(!usuario) {
             return {
                 ok: false, 
                 code: 403,
-                message: "Username/Senha incorretos!"
+                message: "Email/Senha incorretos!"
             }
         }
 

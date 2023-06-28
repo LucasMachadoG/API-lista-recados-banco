@@ -1,27 +1,25 @@
 import { user } from "../../../models/user.models"
 import { cacheRepositoryContract } from "../../../shared/utils/cache.repository.contract"
 import { Return } from "../../../shared/utils/usecase.return"
-import { userDatabase } from "../repositories/user.repository"
-import { CreateUserRepositoryContract } from "../util/user.repository.contract"
+import { CreateUserRepositoryContract, CreateUserRepositoryEmailContract } from "../util/user.repository.contract"
 
 export interface createUserParams {
-    username: string,
-    email: string,
+username: string
+    email: string
     password: string
 }
 
-const usersCacheKey = "users"
+const usersCacheKeyPrefix = "users"
 
 export class createUserUsecase {
     constructor (
+        private databaseEmail: CreateUserRepositoryEmailContract,
         private database: CreateUserRepositoryContract,
         private cache: cacheRepositoryContract
     ) {}
 
     public async execute (data: createUserParams): Promise<Return> {
-        const userEmail = await this.database.getByEmail(data.email)
-
-        let errors: string[] = []
+        const userEmail = await this.databaseEmail.getByEmail(data.email)
 
         if (userEmail) {
             return {
@@ -31,22 +29,10 @@ export class createUserUsecase {
             }
         }
 
-        if (!data.username) {
-            errors.push ("Username was not provider!")
-        }
-
-        if (!data.email) {
-            errors.push ("Email was not provider!")
-        }
-
-        if (!data.password) {
-            errors.push ("Password was not provider!")
-        }
-
-        if (errors.length > 0) {
+        if(data.password.length < 7) {
             return {
-                ok: false,
-                message: `Os seguintes erros aconteceram: ${errors.join(", ")}`,
+                ok: false, 
+                message: "Sua senha precisa ter no minimo 7 caracteres",
                 code: 400
             }
         }
@@ -59,13 +45,23 @@ export class createUserUsecase {
 
         const result = await this.database.create(User)
         
-        await this.cache.delete(usersCacheKey)
+        await this.deleteUsersCacheKeys();
+
+        await this.cache.delete("user")
 
         return {
             ok: true,
-            message: "User successfully created",
             code: 200,
+            message: "Usuario criado com sucesso",
             data: result.toJason()
+        }
+    }
+
+    public async deleteUsersCacheKeys() {
+        const cacheKeys = await this.cache.keys(`${usersCacheKeyPrefix}*`);
+
+        for (const key of cacheKeys) {
+            await this.cache.delete(key);
         }
     }
 }

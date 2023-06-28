@@ -1,3 +1,0 @@
-O back-end atraves das migrations consegue migrar uma entidade la para o banco de dados.
-Antes de comecar a criar nossas migrations nos precisamos configurar o typeorm
-O controller ele nao pode ter informacoes sobre o banco de dados, o processo que um usuario eh criado

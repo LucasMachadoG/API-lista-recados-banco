@@ -9,7 +9,7 @@ interface updateUsecaseParams {
     password?: string
 }
 
-const usersCacheKey = "users"
+const usersCacheKeyPrefix = "users"
 
 export class updateUserUsecase {
 
@@ -34,19 +34,27 @@ export class updateUserUsecase {
         if (result === 0) {
             return {
                 ok: false,
-                message: "User not found",
-                code: 400
+                message: "Usuario nao encontrado",
+                code: 404
             }
         }
 
-        await this.cache.delete(usersCacheKey)
+        await this.deleteUsersCacheKeys();
+
+        await this.cache.delete("user")
 
         return {
             ok: true,
-            message: "User successfully updated",
+            message: "Usuario atualizado com sucesso",
             code: 200
         }
-
-
     }   
+
+    public async deleteUsersCacheKeys() {
+        const cacheKeys = await this.cache.keys(`${usersCacheKeyPrefix}*`);
+
+        for (const key of cacheKeys) {
+            await this.cache.delete(key);
+        }
+    }
 }

@@ -3,9 +3,6 @@ import { redisConnection } from "../../../../main/database/redis.connection";
 import { cacheRepositoryContract } from "../../utils/cache.repository.contract";
 
 export class cacheRepository implements cacheRepositoryContract {
-    static set(usersCacheKey: string, result: any[]) {
-        throw new Error("Method not implemented.");
-    }
     private repository: Redis = redisConnection.connection
 
     public async get<T>(key: string): Promise<T | null>{
@@ -18,11 +15,15 @@ export class cacheRepository implements cacheRepositoryContract {
         return JSON.parse(result) as T
     }
 
-    public async set(key: string, value: any): Promise<void>{
+    public async set(key: string, value: any): Promise<any>{
         await this.repository.set(key, JSON.stringify(value))
     }
 
-    public async delete (key: string): Promise<void>{
-        await this.repository.del(key)
+    public async delete(key: string): Promise<any> {
+        await this.repository.del(key);
+    }
+
+    public async keys(pattern: string): Promise<string[]> {
+        return await this.repository.keys(pattern);
     }
 }

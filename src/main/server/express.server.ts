@@ -26,3 +26,5 @@ export class AppRun {
     }
 }
 
+
+export { createApp }

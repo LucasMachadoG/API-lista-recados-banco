@@ -7,10 +7,11 @@ import { listUsecase } from "../usecases/list.user.usecase"
 import { updateUserUsecase } from "../usecases/update.user.usecase"
 
 export const createUserUsecaseFactory = () => {
+    const databaEmail = new userDatabase()
     const database = new userDatabase()
     const cache = new cacheRepository()
 
-    return new createUserUsecase (database, cache)
+    return new createUserUsecase (databaEmail, database, cache)
 }
 
 export const listUserUsecaseFactory = () => {
@@ -29,8 +30,9 @@ export const deleteUserUsecaseFactory = () => {
 
 export const GetUserUsecaseFactory = () => {
     const database = new userDatabase()
+    const cache = new cacheRepository()
 
-    return new getUserUsecase (database)
+    return new getUserUsecase (database, cache)
 }
 
 export const UpdateUsecaseFactory = () => {
