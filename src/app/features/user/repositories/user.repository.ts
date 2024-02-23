@@ -1,7 +1,6 @@
 import { user } from "../../../models/user.models";
 import { databaseConnection } from "../../../../main/database/typeorm.connection";
 import { userEntity } from "../../../shared/database/entities/user.entity";
-import { RecadoRepository } from "../../recados/database/recado.repository";
 
 export class userDatabase {
     // A gente usa esse repository para fazer operacoes relacionadas a nossa entidade
@@ -42,7 +41,7 @@ export class userDatabase {
 
         return userDatabase.mapToModel(result)
     }
-
+    
     public async create (user: user) {
         const UserEntity = userEntity.create({
             username: user.username,

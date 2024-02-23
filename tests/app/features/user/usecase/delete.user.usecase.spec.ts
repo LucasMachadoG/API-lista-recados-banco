@@ -1,6 +1,5 @@
 import { userDatabase } from "../../../../../src/app/features/user/repositories/user.repository"
 import { deleteUserUsecase } from "../../../../../src/app/features/user/usecases/delete.user.usecase"
-import { user } from "../../../../../src/app/models/user.models"
 import { cacheRepository } from "../../../../../src/app/shared/database/repositories/cache.repository"
 import { redisConnection } from "../../../../../src/main/database/redis.connection"
 import { databaseConnection } from "../../../../../src/main/database/typeorm.connection"

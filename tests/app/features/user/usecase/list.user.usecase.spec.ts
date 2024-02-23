@@ -1,6 +1,5 @@
 import { userDatabase } from "../../../../../src/app/features/user/repositories/user.repository";
 import { listUsecase } from "../../../../../src/app/features/user/usecases/list.user.usecase";
-import { listUserUsecaseFactory } from "../../../../../src/app/features/user/util/user.usecase.factory";
 import { user } from "../../../../../src/app/models/user.models";
 import { cacheRepository } from "../../../../../src/app/shared/database/repositories/cache.repository";
 import { redisConnection } from "../../../../../src/main/database/redis.connection";

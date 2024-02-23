@@ -1,7 +1,6 @@
 
 import { userDatabase } from "../../../../../src/app/features/user/repositories/user.repository";
 import { createUserUsecase } from "../../../../../src/app/features/user/usecases/create.user.usecase";
-import { user } from "../../../../../src/app/models/user.models";
 import { userEntity } from "../../../../../src/app/shared/database/entities/user.entity";
 import { createApp } from "../../../../../src/main/config/express.config";
 import { redisConnection } from "../../../../../src/main/database/redis.connection";

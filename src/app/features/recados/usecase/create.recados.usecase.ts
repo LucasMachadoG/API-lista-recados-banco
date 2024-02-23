@@ -27,7 +27,7 @@ export class createRecadosUsecase{
             return {
                 ok: false, 
                 message: "Usuario nao encontrado",
-                code: 404
+                code: 400
             }
         }
         
